@@ -3,9 +3,7 @@ package com.example.todoapp
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.Button
@@ -13,9 +11,12 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
@@ -41,7 +42,7 @@ class MainActivity : ComponentActivity() {
 data class ToDo(
     val id: Int,
     val title: String,
-    val content: String
+    val description: String
 )
 
 class ToDoRepository {
@@ -75,27 +76,55 @@ fun AppScreen() {
         startDestination = "viewAll"
     ) {
         composable("viewAll") {
-            ViewAllScreen()
+            ViewAllScreen(navController)
+        }
+
+        composable("viewOne/{id}") {
+            val id = it.arguments!!.getString("id")!!.toInt()
+            ViewOneScreen(navController, id)
         }
     }
 }
 
 @Composable
-fun ViewAllScreen() {
-    LazyColumn {
+fun ViewAllScreen(navController: NavHostController) {
+    LazyColumn(modifier = Modifier.fillMaxSize()) {
         items(toDoRepository.getAllToDos()) { toDo ->
             Button(
-                onClick = { },
+                onClick = { navController.navigate("viewOne/${toDo.id}") },
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(horizontal = 30.dp, vertical = 5.dp)
             ) {
-                Text(toDo.title)
+                Text(
+                    toDo.title,
+                    fontSize = 20.sp
+                )
             }
         }
     }
 }
 
+@Composable
+fun ViewOneScreen(navController: NavHostController, id: Int) {
+    val toDo = toDoRepository.getAllToDos().find { it.id == id }!!
+    Column(modifier = Modifier.fillMaxSize()) {
+        Text(
+            text = "Title: " + toDo.title,
+            fontSize = 30.sp,
+            modifier = Modifier
+                .align(Alignment.CenterHorizontally)
+                .padding(vertical = 20.dp)
+        )
+        Text(
+            text = "Description: " + toDo.description,
+            fontSize = 20.sp,
+            modifier = Modifier
+                .align(Alignment.CenterHorizontally)
+                .padding(horizontal = 5.dp, vertical = 20.dp)
+        )
+    }
+}
 
 @Preview(showBackground = true)
 @Composable
