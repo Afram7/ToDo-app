@@ -40,8 +40,8 @@ class MainActivity : ComponentActivity() {
 
 data class ToDo(
     val id: Int,
-    val title: String,
-    val description: String
+    var title: String,
+    var description: String
 )
 
 class ToDoRepository {
@@ -56,6 +56,24 @@ class ToDoRepository {
             "Take a walk and listen to music."
         )
     )
+
+    fun getTitleById(id: Int): String {
+        for (value in toDos) {
+            if (value.id == id) {
+                return value.title
+            }
+        }
+        return ""
+    }
+
+    fun getDescriptionById(id: Int): String {
+        for (value in toDos) {
+            if (value.id == id) {
+                return value.description
+            }
+        }
+        return ""
+    }
 
     fun getAllToDos(): MutableList<ToDo> {
         return toDos
@@ -76,6 +94,15 @@ class ToDoRepository {
         )
 
         return id
+    }
+
+    fun updateToDo(id: Int, newTitle: String, newDescription: String) {
+        for (value in toDos) {
+            if (value.id == id) {
+                value.title = newTitle
+                value.description = newDescription
+            }
+        }
     }
 }
 
@@ -102,8 +129,14 @@ fun AppScreen() {
         composable("createOne") {
             CreateToDoScreen(navController)
         }
+
+        composable("update/{id}") {
+            val id = it.arguments!!.getString("id")!!.toInt()
+            UpdateScreen(navController, id)
+        }
     }
 }
+
 
 @Composable
 fun ViewAllScreen(navController: NavHostController) {
@@ -170,7 +203,7 @@ fun ViewOneScreen(navController: NavHostController, id: Int) {
             }
 
             Button(
-                onClick = { },
+                onClick = { navController.navigate("update/${id}") },
                 colors = ButtonDefaults.buttonColors(backgroundColor = Color.Yellow),
                 shape = RoundedCornerShape(20.dp)
             ) {
@@ -219,7 +252,7 @@ fun CreateToDoScreen(navController: NavHostController) {
         Button(
             onClick = {
                 val id: Int
-                if (!title.text.isEmpty() && !description.text.isEmpty()) {
+                if (title.text.isNotEmpty() && description.text.isNotEmpty()) {
                     id = toDoRepository.addToDo(title.text, description.text)
                     navController.navigate("viewOne/${id}")
                 } else {
@@ -235,6 +268,58 @@ fun CreateToDoScreen(navController: NavHostController) {
         ) {
             Text(
                 text = "Save", fontSize = 15.sp
+            )
+        }
+    }
+}
+
+@Composable
+fun UpdateScreen(navController: NavHostController, id: Int) {
+    var title by remember { mutableStateOf(toDoRepository.getTitleById(id)) }
+    var description by remember { mutableStateOf(toDoRepository.getDescriptionById(id)) }
+    var errorMessage by remember { mutableStateOf("") }
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .wrapContentSize(Alignment.Center)
+    ) {
+        Text(
+            text = errorMessage,
+            color = Color.Red,
+            modifier = Modifier.align(Alignment.CenterHorizontally)
+        )
+
+        TextField(
+            value = title,
+            onValueChange = { title = it },
+            label = { Text(text = "Title") }
+        )
+
+        TextField(
+            value = description,
+            onValueChange = { description = it },
+            label = { Text(text = "Description") }
+        )
+
+        Button(
+            onClick = {
+
+                if (title.isNotEmpty() && description.isNotEmpty()) {
+                    toDoRepository.updateToDo(id, title, description)
+                    navController.navigate("viewOne/${id}")
+                } else {
+                    errorMessage = "You must fill in both fields"
+                }
+            },
+            modifier = Modifier
+                .align(Alignment.CenterHorizontally)
+                .size(width = 200.dp, height = 50.dp)
+                .padding(top = 10.dp),
+            colors = ButtonDefaults.buttonColors(backgroundColor = Color.Yellow),
+            shape = RoundedCornerShape(20.dp)
+        ) {
+            Text(
+                text = "Update", fontSize = 15.sp
             )
         }
     }
