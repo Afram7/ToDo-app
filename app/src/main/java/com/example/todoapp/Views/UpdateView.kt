@@ -45,12 +45,15 @@ fun UpdateScreen(navController: NavHostController, id: Int) {
 
         Button(
             onClick = {
-
-                if (title.isNotEmpty() && description.isNotEmpty()) {
+                if (title.isEmpty() && description.isEmpty()) {
+                    errorMessage = "You must fill in both fields"
+                } else if (title.length < 2 ){
+                    errorMessage = "The Title must at least contain 2 characters"
+                } else if (title.length > 20 ){
+                    errorMessage = "The Title can't be longer than 20 characters"
+                } else {
                     toDoRepository.updateToDo(id, title, description)
                     navController.navigate("viewOne/${id}")
-                } else {
-                    errorMessage = "You must fill in both fields"
                 }
             },
             modifier = Modifier

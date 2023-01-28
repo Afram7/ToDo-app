@@ -46,12 +46,15 @@ fun CreateToDoScreen(navController: NavHostController) {
 
         Button(
             onClick = {
-                val id: Int
-                if (title.text.isNotEmpty() && description.text.isNotEmpty()) {
-                    id = toDoRepository.addToDo(title.text, description.text)
-                    navController.navigate("viewOne/${id}")
-                } else {
+                if (title.text.isEmpty() && description.text.isEmpty()) {
                     errorMessage = "You must fill in both fields"
+                } else if (title.text.length < 2 ){
+                    errorMessage = "The Title must at least contain 2 characters"
+                } else if (title.text.length > 20 ){
+                    errorMessage = "The Title can't be longer than 20 characters"
+                } else {
+                    val id = toDoRepository.addToDo(title.text, description.text)
+                    navController.navigate("viewOne/${id}")
                 }
             },
             modifier = Modifier
