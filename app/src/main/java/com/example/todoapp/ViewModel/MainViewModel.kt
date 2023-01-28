@@ -52,4 +52,12 @@ class ToDoRepository {
             }
         }
     }
+
+    fun deleteToDo(id: Int){
+        for (value in toDos) {
+            if (value.id == id) {
+                toDos.removeAt(toDos.indexOf(value))
+            }
+        }
+    }
 }

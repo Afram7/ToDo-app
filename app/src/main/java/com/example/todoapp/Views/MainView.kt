@@ -4,10 +4,7 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.example.todoapp.Views.CreateToDoScreen
-import com.example.todoapp.Views.UpdateScreen
-import com.example.todoapp.Views.ViewAllScreen
-import com.example.todoapp.Views.ViewOneScreen
+import com.example.todoapp.Views.*
 
 // Global variable used to store all ToDos.
 val toDoRepository = ToDoRepository()
@@ -36,6 +33,11 @@ fun AppScreen() {
         composable("update/{id}") {
             val id = it.arguments!!.getString("id")!!.toInt()
             UpdateScreen(navController, id)
+        }
+
+        composable("delete/{id}") {
+            val id = it.arguments!!.getString("id")!!.toInt()
+            DeleteToDoScreen(navController, id)
         }
     }
 }
