@@ -14,6 +14,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
@@ -22,18 +23,28 @@ import com.example.todoapp.toDoRepository
 @Composable
 fun ViewAllScreen(navController: NavHostController) {
     Box(modifier = Modifier.fillMaxSize()) {
-        LazyColumn() {
-            items(toDoRepository.getAllToDos()) { toDo ->
-                Button(
-                    onClick = { navController.navigate("viewOne/${toDo.id}") },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 30.dp, vertical = 5.dp)
-                ) {
+        LazyColumn(modifier = Modifier.align(Alignment.Center)) {
+            if (toDoRepository.getAllToDos().isEmpty()) {
+                item {
                     Text(
-                        toDo.title,
-                        fontSize = 20.sp
+                        text = "It seems you have nothing to do 😃",
+                        fontSize = 25.sp,
+                        textAlign = TextAlign.Center
                     )
+                }
+            } else {
+                items(toDoRepository.getAllToDos()) { toDo ->
+                    Button(
+                        onClick = { navController.navigate("viewOne/${toDo.id}") },
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 30.dp, vertical = 5.dp)
+                    ) {
+                        Text(
+                            toDo.title,
+                            fontSize = 20.sp
+                        )
+                    }
                 }
             }
         }

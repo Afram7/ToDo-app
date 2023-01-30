@@ -30,21 +30,25 @@ fun DeleteToDoScreen(navController: NavHostController, id: Int) {
             modifier = Modifier.padding(vertical = 30.dp)
         )
         Row(
-            modifier = Modifier
-                .fillMaxWidth(),
+            modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceEvenly
         ) {
             Button(
-                onClick = { navController.navigate("viewOne/${id}") },
+                onClick = {
+                    navController.navigate("viewOne/${id}") {
+                        popUpTo("viewAll")
+                    }
+                },
                 shape = RoundedCornerShape(20.dp),
                 modifier = Modifier.size(height = 40.dp, width = 150.dp)
             ) {
                 Text(text = "Cancel")
             }
+
             Button(
                 onClick = {
                     toDoRepository.deleteToDo(id)
-                    navController.navigate("viewAll"){
+                    navController.navigate("viewAll") {
                         popUpTo("viewAll") { inclusive = true }
                     }
                 },
@@ -55,6 +59,5 @@ fun DeleteToDoScreen(navController: NavHostController, id: Int) {
                 Text(text = "Delete")
             }
         }
-
     }
 }

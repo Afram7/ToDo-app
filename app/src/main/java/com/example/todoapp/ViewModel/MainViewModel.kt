@@ -1,17 +1,7 @@
 package com.example.todoapp
 
 class ToDoRepository {
-    private val toDos = mutableListOf<ToDo>(
-        ToDo(
-            1,
-            "Feed the pets",
-            "Give the cat a fish and the dog a cat."
-        ), ToDo(
-            2,
-            "Exercise",
-            "Take a walk and listen to music."
-        )
-    )
+    private val toDos = mutableListOf<ToDo>()
 
     fun getTitleById(id: Int): String {
         for (value in toDos) {
@@ -53,7 +43,7 @@ class ToDoRepository {
         }
     }
 
-    fun deleteToDo(id: Int){
+    fun deleteToDo(id: Int) {
         for (value in toDos) {
             if (value.id == id) {
                 toDos.removeAt(toDos.indexOf(value))

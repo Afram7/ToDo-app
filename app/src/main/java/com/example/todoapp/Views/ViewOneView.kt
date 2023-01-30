@@ -58,7 +58,7 @@ fun ViewOneScreen(navController: NavHostController, id: Int) {
             }
 
             Button(
-                onClick = { navController.navigate("delete/${id}")},
+                onClick = { navController.navigate("delete/${id}") },
                 colors = ButtonDefaults.buttonColors(backgroundColor = Color.Red),
                 shape = RoundedCornerShape(20.dp)
             ) {

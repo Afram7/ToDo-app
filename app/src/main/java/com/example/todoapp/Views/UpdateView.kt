@@ -20,11 +20,18 @@ fun UpdateScreen(navController: NavHostController, id: Int) {
     var title by remember { mutableStateOf(toDoRepository.getTitleById(id)) }
     var description by remember { mutableStateOf(toDoRepository.getDescriptionById(id)) }
     var errorMessage by remember { mutableStateOf("") }
+
     Column(
         modifier = Modifier
             .fillMaxSize()
             .wrapContentSize(Alignment.Center)
     ) {
+        Text(
+            text = "Update ToDo",
+            fontSize = 35.sp,
+            modifier = Modifier.align(Alignment.CenterHorizontally)
+        )
+
         Text(
             text = errorMessage,
             color = Color.Red,
@@ -33,12 +40,14 @@ fun UpdateScreen(navController: NavHostController, id: Int) {
 
         TextField(
             value = title,
+            modifier = Modifier.width(300.dp),
             onValueChange = { title = it },
             label = { Text(text = "Title") }
         )
 
         TextField(
             value = description,
+            modifier = Modifier.width(300.dp),
             onValueChange = { description = it },
             label = { Text(text = "Description") }
         )
@@ -47,13 +56,13 @@ fun UpdateScreen(navController: NavHostController, id: Int) {
             onClick = {
                 if (title.isEmpty() && description.isEmpty()) {
                     errorMessage = "You must fill in both fields"
-                } else if (title.length < 2 ){
+                } else if (title.length < 2) {
                     errorMessage = "The Title must at least contain 2 characters"
-                } else if (title.length > 20 ){
+                } else if (title.length > 20) {
                     errorMessage = "The Title can't be longer than 20 characters"
                 } else {
                     toDoRepository.updateToDo(id, title, description)
-                    navController.navigate("viewOne/${id}"){
+                    navController.navigate("viewOne/${id}") {
                         popUpTo("viewAll")
                     }
                 }

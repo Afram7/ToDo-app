@@ -21,11 +21,18 @@ fun CreateToDoScreen(navController: NavHostController) {
     var title by remember { mutableStateOf(TextFieldValue("")) }
     var description by remember { mutableStateOf(TextFieldValue("")) }
     var errorMessage by remember { mutableStateOf("") }
+
     Column(
         modifier = Modifier
             .fillMaxSize()
             .wrapContentSize(Alignment.Center)
     ) {
+        Text(
+            text = "Create a ToDo",
+            fontSize = 35.sp,
+            modifier = Modifier.align(Alignment.CenterHorizontally)
+        )
+
         Text(
             text = errorMessage,
             color = Color.Red,
@@ -34,12 +41,14 @@ fun CreateToDoScreen(navController: NavHostController) {
 
         TextField(
             value = title,
+            modifier = Modifier.width(300.dp),
             onValueChange = { title = it },
             label = { Text(text = "Title") }
         )
 
         TextField(
             value = description,
+            modifier = Modifier.width(300.dp),
             onValueChange = { description = it },
             label = { Text(text = "Description") }
         )
@@ -48,9 +57,9 @@ fun CreateToDoScreen(navController: NavHostController) {
             onClick = {
                 if (title.text.isEmpty() && description.text.isEmpty()) {
                     errorMessage = "You must fill in both fields"
-                } else if (title.text.length < 2 ){
+                } else if (title.text.length < 2) {
                     errorMessage = "The Title must at least contain 2 characters"
-                } else if (title.text.length > 20 ){
+                } else if (title.text.length > 20) {
                     errorMessage = "The Title can't be longer than 20 characters"
                 } else {
                     val id = toDoRepository.addToDo(title.text, description.text)
@@ -67,7 +76,8 @@ fun CreateToDoScreen(navController: NavHostController) {
             shape = RoundedCornerShape(20.dp)
         ) {
             Text(
-                text = "Save", fontSize = 15.sp
+                text = "Save",
+                fontSize = 15.sp
             )
         }
     }
