@@ -54,7 +54,9 @@ fun CreateToDoScreen(navController: NavHostController) {
                     errorMessage = "The Title can't be longer than 20 characters"
                 } else {
                     val id = toDoRepository.addToDo(title.text, description.text)
-                    navController.navigate("viewOne/${id}")
+                    navController.navigate("viewOne/${id}") {
+                        popUpTo("viewAll")
+                    }
                 }
             },
             modifier = Modifier

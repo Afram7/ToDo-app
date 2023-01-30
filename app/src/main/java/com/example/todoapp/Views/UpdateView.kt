@@ -53,7 +53,9 @@ fun UpdateScreen(navController: NavHostController, id: Int) {
                     errorMessage = "The Title can't be longer than 20 characters"
                 } else {
                     toDoRepository.updateToDo(id, title, description)
-                    navController.navigate("viewOne/${id}")
+                    navController.navigate("viewOne/${id}"){
+                        popUpTo("viewAll")
+                    }
                 }
             },
             modifier = Modifier

@@ -44,7 +44,9 @@ fun DeleteToDoScreen(navController: NavHostController, id: Int) {
             Button(
                 onClick = {
                     toDoRepository.deleteToDo(id)
-                    navController.navigate("viewAll")
+                    navController.navigate("viewAll"){
+                        popUpTo("viewAll") { inclusive = true }
+                    }
                 },
                 colors = ButtonDefaults.buttonColors(backgroundColor = Color.Red),
                 shape = RoundedCornerShape(20.dp),
