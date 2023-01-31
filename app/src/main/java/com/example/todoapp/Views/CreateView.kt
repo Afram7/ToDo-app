@@ -10,7 +10,6 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
@@ -18,8 +17,8 @@ import com.example.todoapp.toDoRepository
 
 @Composable
 fun CreateToDoScreen(navController: NavHostController) {
-    var title by remember { mutableStateOf(TextFieldValue("")) }
-    var description by remember { mutableStateOf(TextFieldValue("")) }
+    var title by remember { mutableStateOf("") }
+    var description by remember { mutableStateOf("") }
     var errorMessage by remember { mutableStateOf("") }
 
     Column(
@@ -55,17 +54,14 @@ fun CreateToDoScreen(navController: NavHostController) {
 
         Button(
             onClick = {
-                if (title.text.isEmpty() && description.text.isEmpty()) {
-                    errorMessage = "You must fill in both fields"
-                } else if (title.text.length < 2) {
-                    errorMessage = "The Title must at least contain 2 characters"
-                } else if (title.text.length > 20) {
-                    errorMessage = "The Title can't be longer than 20 characters"
-                } else {
-                    val id = toDoRepository.addToDo(title.text, description.text)
+                val result = toDoRepository.validateTitleAndDescription(title, description)
+                if (result is Int) {
+                    val id = toDoRepository.addToDo(title, description)
                     navController.navigate("viewOne/${id}") {
                         popUpTo("viewAll")
                     }
+                } else if (result is String) {
+                    errorMessage = result
                 }
             },
             modifier = Modifier

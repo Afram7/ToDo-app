@@ -20,7 +20,6 @@ fun UpdateScreen(navController: NavHostController, id: Int) {
     var title by remember { mutableStateOf(toDoRepository.getTitleById(id)) }
     var description by remember { mutableStateOf(toDoRepository.getDescriptionById(id)) }
     var errorMessage by remember { mutableStateOf("") }
-
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -54,17 +53,14 @@ fun UpdateScreen(navController: NavHostController, id: Int) {
 
         Button(
             onClick = {
-                if (title.isEmpty() && description.isEmpty()) {
-                    errorMessage = "You must fill in both fields"
-                } else if (title.length < 2) {
-                    errorMessage = "The Title must at least contain 2 characters"
-                } else if (title.length > 20) {
-                    errorMessage = "The Title can't be longer than 20 characters"
-                } else {
+                val result = toDoRepository.validateTitleAndDescription(title, description)
+                if (result is Int) {
                     toDoRepository.updateToDo(id, title, description)
                     navController.navigate("viewOne/${id}") {
                         popUpTo("viewAll")
                     }
+                } else if (result is String) {
+                    errorMessage = result
                 }
             },
             modifier = Modifier
