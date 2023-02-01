@@ -55,12 +55,12 @@ fun CreateToDoScreen(navController: NavHostController) {
         Button(
             onClick = {
                 val result = toDoRepository.validateTitleAndDescription(title, description)
-                if (result is Int) {
+                if (result == "OK") {
                     val id = toDoRepository.addToDo(title, description)
                     navController.navigate("viewOne/${id}") {
                         popUpTo("viewAll")
                     }
-                } else if (result is String) {
+                } else {
                     errorMessage = result
                 }
             },

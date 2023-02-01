@@ -51,7 +51,7 @@ class ToDoRepository {
         }
     }
 
-    fun validateTitleAndDescription(title: String, description: String): Any {
+    fun validateTitleAndDescription(title: String, description: String): String {
         if (title.isEmpty() || description.isEmpty()) {
             return "You must fill in both fields"
         } else if (title.length < 2) {
@@ -59,6 +59,6 @@ class ToDoRepository {
         } else if (title.length > 20) {
             return "The Title can't be longer than 20 characters"
         }
-        return 0
+        return "OK"
     }
 }

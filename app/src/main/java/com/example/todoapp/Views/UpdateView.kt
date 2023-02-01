@@ -54,12 +54,12 @@ fun UpdateScreen(navController: NavHostController, id: Int) {
         Button(
             onClick = {
                 val result = toDoRepository.validateTitleAndDescription(title, description)
-                if (result is Int) {
+                if (result == "OK") {
                     toDoRepository.updateToDo(id, title, description)
                     navController.navigate("viewOne/${id}") {
                         popUpTo("viewAll")
                     }
-                } else if (result is String) {
+                } else {
                     errorMessage = result
                 }
             },
